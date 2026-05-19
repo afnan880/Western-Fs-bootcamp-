@@ -1,0 +1,315 @@
+
+console.log("Hello World");
+// alert("Please provide your username");
+var num = 5;
+num = num + 5;
+console.log(num);
+
+const total_marks = 100;
+console.log(total_marks);
+
+var num = 30;
+console.log('thisis my second number: ' + num);
+
+// different data types
+var name = "Afnan"; // string
+var age = 22; // number
+var is_student = true; // boolean
+var cars = ["BMW", "Audi", "Mercedes"]; // array
+var persons = new Array("John", "Jane", "Doe"); // array
+console.log('cars: ' + cars);
+console.log('Display the first car: ' + cars[0]);
+console.log('Display the Third car: ' + cars[2]);
+
+console.log(persons);
+
+console.log('Display the second person: ' + persons[1]);
+var person = {
+    name: "Alice",
+    age: 30,
+    city: "New York"
+};
+console.log(person);
+console.log(' name of the person ' + person.name, ' age of the person ' + person.age,);
+
+var students = [
+    { first_name: "Andrew", last_name: "", age: 32 },
+    { first_name: "John", last_name: "Doe", age: 25 },
+    { first_name: "Jane", last_name: "Smith", age: 28 }
+];
+console.log('Students:', students);
+//Display the name john and
+// jane with its age
+console.log(students[1].first_name);
+console.log(students[2].first_name + " is " + students[2].age + " years old.");
+
+
+
+
+
+
+
+
+
+if (is_student) {
+    console.log(" My name is " + name + " and I am " + age + " years old. ");
+} else {
+    console.log(" student not found. ");
+}
+
+var x = 5;
+var y = "5";
+console.log(x + y);
+
+//arithemetic operators in JavaScript
+var a = 15;
+var b = 4;
+var c = a + b; // Addition
+console.log("Value of c:", c);
+c = c - b; // Subtraction
+console.log("Value of c:", c);
+c = c * b; // Multiplication
+console.log("Multiplication example:", c);
+c = c / b; // Division
+console.log("Division example:", c);
+
+var num = 20;
+num += 10;
+num -= 5;
+console.log("Value of num:", num);
+
+num++;
+console.log("Value of num:", num);
+
+num--;//equivalent to num = num + 10;
+console.log("Value of num:", num);
+
+num = 20;
+
+if (num >= 20) {
+    console.log(num + " is greater than or equal to 20");
+} else if (num == 20) {
+    console.log(num + " is equal to 20");
+}
+else {
+    console.log(num + " is less than 20");
+}
+
+// difference between == and ===
+if (num == "20") {
+    let message = "This is my message";
+    var message2 = "This is my message 2";
+    console.log("Value is equal to 20");
+} else {
+    console.log("Value is not equal to '20'");
+}
+console.log(message2); // This will work because message2 is declared with var and has function scope.
+// console.log(message); // This will cause an error because message is defined inside the if block and its scope is limited to that block.
+
+//loops in js
+for (var i = 0; i < 10; i++) {
+    console.log("The value of i is: " + i);
+}
+
+for (var x = 0; x < 51; x = x + 5) {
+    console.log('The value of x : ' + x);
+}
+for (var y = 50; y >= 0; y = y - 5) {
+    console.log('The value of y : ' + y);
+}
+console.log('persons: ' + persons[0]);
+for (var a in persons) {
+    console.log(persons[a]);
+}
+
+persons.forEach(function (x) {
+    console.log(x);
+});
+
+
+
+var count = 0;
+var sum = 0;
+while (count <= 100) {
+    console.log('Count is: ' + count);
+    sum = sum + count;
+    console.log('Sum is: ' + sum);
+    count++;
+
+
+}
+sum = 0;
+for (var i = 0; i < 10; i++) {
+    console.log("The value of i is: " + i);
+    sum = sum + i;
+    console.log('Sum is: ' + sum);
+}
+//do while loop
+var test = 0;
+do {
+    console.log("Test is:", test);
+    test++;
+} while (test > 100);
+
+//functions in js
+function hello() {
+    console.log("Hello World");
+}
+hello();
+function greet(name) {
+    console.log("Hello " + name);
+}
+greet("Afnan");
+greet("John");
+greet("Jane");
+greet("Doe");
+
+//function to display a number from 0 to n
+function displayNumbers(num) {
+    var i = 0;
+    while (i <= num) {
+        console.log("Value of i: " + i)
+        i++;
+    }
+}
+displayNumbers(10);
+displayNumbers(20);
+displayNumbers(30);
+
+// function to calculate grades
+function calculateGrade(name, marks) {
+    if (marks >= 90) {
+        console.log(name + " received a grade of A");
+    } else if (marks >= 80) {
+        console.log(name + " received a grade of B");
+    } else if (marks >= 70) {
+        console.log(name + " received a grade of C");
+    } else {
+        console.log(name + " received a grade of F");
+
+    }
+
+}
+calculateGrade("Alice", 95);
+calculateGrade("Bob", 85);
+calculateGrade("Charlie", 75);
+
+// built in functions in js 
+var name = "Harsh";
+console.log(name.toUpperCase());
+console.log(name.toLowerCase());
+// arr.push to add an element to the end of the array
+var arr = ["BMW", "Audi", "Mercedes"];
+arr.push("Tesla");
+arr.push("Lexus");
+arr.push("Toyota");
+console.log(arr);
+console.log(arr.length);
+
+arr.forEach(function (x) {
+    console.log(x);
+});
+
+
+
+var emptyArr = [];
+if (emptyArr.length > 0) {
+    console.log("Array is not empty");
+} else {
+    console.log("Array is empty");
+}
+arr.sort();
+console.log(arr);
+
+arr.pop();
+console.log(arr);
+
+arr.splice(0, 2);
+console.log(arr);
+
+var newArr = arr.slice(0, 1);
+console.log(newArr);
+
+// indexof ,includes,forEach,map,filter.
+// show examples of || and && operators
+// use switch
+
+if (arr.includes("Lexus")) {
+    console.log("Lexus is in the array");
+} else {
+    console.log("Lexus is not in the array");
+}
+
+if (arr.indexOf("Lexus") !== -1) {
+    console.log("Lexus is present in the array");
+} else {
+    console.log("Lexus is not in present in the array");
+}
+
+if (true || false) {
+    console.log("This will always be true");
+} else {
+    console.log("This will never be true");
+}
+if (true || false) {
+    console.log("This will always be true");
+} else {
+    console.log("This will never be true");
+}
+
+if (true && false) {
+    console.log("This will always be true");
+} else {
+    console.log("This will never be true");
+}
+if (true && !false) {
+    console.log("This will always be true");
+} else {
+    console.log("This will never be true");
+}
+
+
+//switch case in js
+var day = "Monday";
+switch (day) {
+    case "Monday":
+        console.log("Today is Monday");
+        break;
+    case "Tuesday":
+        console.log("Today is Tuesday");
+        break;
+    case "Wednesday":
+        console.log("Today is Wednesday");
+        break;
+    case "Thursday":
+        console.log("Today is Thursday");
+        break;
+    case "Friday":
+        console.log("Today is Friday");
+        break;
+    case "Saturday":
+        console.log("Today is Saturday");
+        break;
+    
+    default:
+        console.log("Sunday");
+}
+
+
+var x= 60;
+switch (true) {
+    case (x<50):
+        console.log("x is less than 50");
+        break;
+    case (x >= 50 && x < 100):
+        console.log("x is between 50 and 100" + x);
+        break;
+    default:
+        console.log("x is greater than 100" +(x>100));
+}
+
+
+
+
+
+
