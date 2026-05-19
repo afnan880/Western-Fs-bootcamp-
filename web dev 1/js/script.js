@@ -295,6 +295,7 @@ switch (day) {
         console.log("Sunday");
 }
 
+// its better to use if else statement in this case
 
 var x= 60;
 switch (true) {
