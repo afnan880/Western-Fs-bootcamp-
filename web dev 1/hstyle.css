@@ -1,0 +1,27 @@
+img{
+    widht:140px;
+    height:120px;
+}
+table{
+    margin:100px;
+    padding:10px;
+
+}
+tr,td{
+    border:2px solid black;
+    padding:5px;
+    text-align:center;
+}
+h1{
+    color:black;
+    text-align:center;
+    margin-top: 50px;
+    border : 50px solid black;
+    padding: 10px;
+    background-color: lightblue;
+}
+form{
+    text-align:center;
+    
+    
+}
