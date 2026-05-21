@@ -1,0 +1,12 @@
+@media (max-width: 767px) {
+            body {
+                font-size: 14px;
+                .styling{color:red;
+                    font-size:16px; }
+            }
+
+            /* img {
+                max-width: 300px;
+            } */
+
+        }
