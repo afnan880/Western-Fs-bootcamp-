@@ -1,0 +1,134 @@
+<html>
+
+<head>
+    <title>Advance css</title>
+</head>
+<style>
+    li {
+        display: inline;
+        font-style: italic
+    }
+
+    img {
+        float: right;
+        z-index: -1;
+    }
+
+    .fixed {
+        position: fixed;
+        top: 50px;
+        left: 200px;
+        height: 400px;
+        background-color: red;
+        border: 2px solid black;
+    }
+
+    .relative {
+        position: relative;
+        top: 50px;
+        left: 200px;
+        height: 600px;
+        background-color: green;
+        border: 2px solid black;
+    }
+
+    .absolute {
+        position: absolute;
+        top: 50px;
+    
+        height: 80px;
+        background-color: blue;
+        border: 2px solid black;
+
+    }
+
+    .abs {
+        left: 50px;
+    }
+
+    .absolute1 {
+
+        left: 280px;
+
+
+    }
+
+    .absolute2 {
+
+        left: 480px;
+
+
+    }
+
+    .absolute3 {
+
+        right: 480px;
+    }
+
+
+
+
+    .sticky {
+        position: sticky;
+        top: 0px;
+        padding: 50px;
+        background-color: orange;
+        border: 2px solid black;
+    }
+</style>
+
+<body>
+    <ul>
+        <li>Home</li>
+        <li>About</li>
+        <li>Contact</li>
+
+
+
+
+    </ul>
+    <div class="fixed">
+        This is a fixed element
+    </div>
+
+    <div class="relative">
+        This is a relative element
+        <div class="absolute abs">
+            This is an absolute element
+        </div>
+        <div class=" absolute absolute1">
+            this is an absolute element
+
+
+        </div>
+        <div class="absolute absolute2">This is an absolute element</div>
+        <div class="absolute absolute3">This is an absolute element</div>
+
+    </div>
+    <div class="sticky">
+        This is a sticky element
+    </div>
+    <div style="padding-bottom: 800px;">
+
+    </div>
+
+    <img src="./google.jpg" alt="not found">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
