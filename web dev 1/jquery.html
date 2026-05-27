@@ -1,0 +1,87 @@
+<html>
+
+<head>
+    <title> jQuery Basics</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $( '#demo' ).text("jQuery is working")
+       $('.myClass').text("This is updated text for myClass div");
+       $('span').text("This is updated text for paragraph");
+       $('#text').text("This is updated text for div 1</h2>")
+       $('.text').html("This is updated text for div 2</h2>")
+       $('p').css('color' , 'blue');
+       //multiple css change 
+       $('p').css({
+        'background-color':'yellow'});
+       $('.heading').css('color' , 'red');
+       $('#text').addClass('myClass');
+       $('span').removeClass('myClass');
+       $('#close').click(function(){
+        alert("button clicked!");
+        $('p').hide();
+        $('img').hide();
+       })
+        $('#open').click(function(){
+       
+        $('p').show();
+        $('img').show();
+        $('#div1').fadeIn('slow');
+        $('#div2').fadeIn('6000');
+
+       })
+       
+       
+       
+       
+       
+       
+       
+        });
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+</head>
+<style>
+    .myClass {
+        color: green;
+        background-Color: pink;
+        font-size: 20px;
+    }
+</style>
+
+<body>
+    <h1> jQuery Basics</h1>
+    <p id="demo">This is a paragraph with id demo   </p>
+<div class="myClass">div with class myClass</div>
+<span class="myClass">span with class myClass   </span>
+<div id="text">
+    this is my text
+
+</div>
+<div class="text">this is class text</div>
+<h3 class="heading">This is a heading</h3>
+<img id="image" src="../download (1).jpg" alt="image">
+<div>
+<button id="close">Close paragraph</button>
+<button id="open">open paragraph</button>
+</div>
+<div id="div1" style="width:400px; height:400px; background-color:red; display:none;"></div>
+<div id="div2" style="width:400px; height:400px; background-color:blue; display:none;"></div>
+
+
+
+</body>
+
+</html>

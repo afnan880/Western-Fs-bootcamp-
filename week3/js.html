@@ -1,15 +1,61 @@
 <html>
-    <head>
-        <title>Javascript Basics</title>
-    </head>
-   
-    <body>
-        <h1>Javascript Basics</h1>
-        <p>This is a simple page for demonstrating js basics</p>
-        <p id="demo">paragraph with id demo</p>
-        <div class="myClass">div with class myClass</div>
-         <script>
-       document.getElementById("demo").innerHTML = "Hello,Javascript! " 
+
+<head>
+    <title>Javascript Basics</title>
+    <script>
+        window.onload = function () {
+
+            document.getElementById("demo").innerHTML = "Hello,Javascript! "
+            document.getElementsByClassName("myClass")[0].innerHTML = "This is updated text for myClass div";
+            document.getElementsByTagName("p")[0].style.color = "blue";
+            let second_paragraph = document.getElementsByTagName("p")[1];
+            second_paragraph.style.color = "red";
+            second_paragraph.style.backgroundColor = "yellow";
+            second_paragraph.style.fontWeight = "bold";
+
+            document.getElementById("demo").className = "styleClass";
+            var newParagraph = document.createElement("p");
+            newParagraph.innerHTML = "This is a new paragraph";
+            document.body.appendChild(newParagraph);
+        }
+
+        function changeText() {
+            alert("Button clicked!");
+
+            document.getElementsByTagName("p")[0].innerHTML = "New Text after button clicked!";
+
+
+
+        }
+        function changeImage() {
+            // alert("Image will be changed");
+        document.getElementById("dogImage").src ="../images/husky.jpg";
+        
+        
+        }
+
     </script>
+</head>
+<style>
+    .styleClass {
+        color: green;
+        background-Color: pink;
+        font-size: 20px;
+    }
+</style>
+
+
+<body>
+    <h1>Javascript Basics</h1>
+    <p>This is a simple page for demonstrating js basics</p>
+    <p id="demo">paragraph with id demo</p>
+    <div class="myClass">div with class myClass</div>
+    <span class="myClass">span with class myClass</span>
+    <img id="dogImage" src="../images/golden retriver.jpg" alt="image">
+    <div>
+    <button onClick="changeText()">Click me</button>
+     <button onClick="changeImage()">Change Image</button>
+</div>
 </body>
+
 </html>
