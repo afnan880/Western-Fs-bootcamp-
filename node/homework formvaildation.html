@@ -1,0 +1,49 @@
+homework formvaildation.html
+<html>
+
+<head>
+    <title> Form validation </title>
+
+</head>
+<script>
+    var username = document.getElementById("username");
+    var password = document.getElementById("password");
+    var usernameError = document.getElementById("usernameError");
+    var passwordError = document.getElementById("passwordError");
+    var form = document.getElementById("signinForm");
+console.log("form" , form.value);
+
+   usernameError.style.display = 'none';
+         passwordError.style.display = 'none';
+ 
+         if(username == '' && password == ''){
+            usernameError.style.display = 'inline';
+            passwordError.style.display = 'inline';
+         } else if(username == ''){
+            usernameError.style.display = 'inline';
+         }
+         else if(password == ''){
+            passwordError.style.display = 'inline';
+         } else {
+            form.submit();
+         }
+        
+
+
+
+
+</script>
+<body>
+    <h1>Log In</h1>
+    <form id="loginForm" action="submit.php" method="get">
+        <input type="text" name="username" id="username" placeholder="Enter your username">
+        <span id="usernameError" style="color:red; display:none">Username is required</span>
+        <br>
+        <input type="password" name="password" id="password" placeholder="Enter your password">
+        <span id="passwordError" style="color:red; display:none">Password cannot be empty</span>
+        <br>
+        <input type="button" onClick="submitForm()" value="Submit">
+    </form>
+</body>
+
+</html>
