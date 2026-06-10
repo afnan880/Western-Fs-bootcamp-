@@ -1,1 +1,9 @@
-<p>students works!</p>
+<p>students list!</p>
+@for (student of studentList; track student.name) {
+    <div>
+  <p>{{ 'Name: ' + student.name + ' Age: ' + student.age + ' City: ' + student.city }}</p>
+  </div>
+} @empty {
+  <p>No students found.</p>
+}
+   

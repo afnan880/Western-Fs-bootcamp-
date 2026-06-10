@@ -1,60 +1,53 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Person } from '../interfaces/person'
- import { CommonModule } from '@angular/common';
- import { User } from './user/user';
- import { Students } from './students/students';
+import { Person } from '../interfaces/person';
+import {CommonModule} from '@angular/common';
+import {Userservice} from './services/userservice';
+import { Navbar } from './navbar/navbar';
+
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, User, Students],
+  imports: [RouterOutlet, CommonModule, Navbar],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
   protected readonly title = signal('Angular Basic');
- 
+
+  constructor(private userService: Userservice) {
+    this.personList = this.userService.getUsers();
+  }
+
+  imageUrl: string = 'https://www.w3schools.com/bootstrap4/img_avatar3.png';
+
   name:string = 'Harsh';
- 
+
   person: Person = {
     name: 'Harsh',
     age: 25,
     city: 'New York'
   }
- 
-personList: Person[] = [
-  {
-    name: 'Harsh',
-    age: 25,
-    city: 'New York'
-  },
-  {
-    name: 'Alice',
-    age: 30,
-    city: 'Los Angeles'
-  },
-  {
-    name: 'Bob',
-    age: 28,
-    city: 'Chicago'
+
+  personList: Person[] = [];
+
+  isDisabled: boolean = false;
+
+  bgColor:string = 'beige';
+  styleString: string = 'color: white; background-color: lightblue; font-size: 20px;';
+
+  bgGreenClass = 'bg-green';
+  bgYellowClass = 'bg-yellow';
+
+  cost = 150;
+  date = Date.now();
+
+  showMessage(): void {
+    console.log('Button Clicked!');
   }
-];    
 
-imageUrl: string = 'https://angular.io/assets/images/logos/angular/angular.svg';
+  //create a new student components unless you already did - Done
+  //consume the user service in the student component and display the list of users in the student component template using @for directive
+  // include the students component as a child user User component - In Progress
 
-isDisabled: boolean = true;
-
-
-bgColor: string = 'beige';
-stylestring: string = 'color: red; font-size: 20px;';
-
-bgRedClass = 'bg-red';
-bgYellowClass = 'bg-yellow';
-
-showMessage(): void {
-  console.log('Button clicked!'); 
 }
- 
-
-
-} 
 

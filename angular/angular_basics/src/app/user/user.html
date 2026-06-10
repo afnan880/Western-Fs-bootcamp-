@@ -1,6 +1,25 @@
 <h1>User Component</h1>
+
 <p>username: {{ userName }}</p>
-<div>Property Binding example: <input type="text" [value]="userName"></div>
-<div>Property Binding using ngModelexample:<input type="text" [ngModel]="userName"></div>
-<div>Two way data binding:<input type="text" [(ngModel)]="userName"></div>
-<button (click)="userName='Jake'">Change username</button>
+<div>
+    Property Binding example: <input type="text" [value]="userName">
+</div>
+<div>
+    Property Binding using ngModelexample:<input type="text" [ngModel]="userName">
+</div>
+<div>
+    Two way data binding:<input type="text" [(ngModel)]="userName">
+</div>
+
+<h2>List of users:</h2>
+<ul>
+@for (p of userList; track p.name) {
+  <li>{{ ' Name: ' + p.name + ' Age: ' + p.age + ' City: ' + p.city }}</li>
+} @empty {
+  <li>There are no users on the list.</li>
+}
+</ul>
+
+<button (click)="updateUserName()">Set Username to John Doe</button>
+
+<app-students></app-students>
