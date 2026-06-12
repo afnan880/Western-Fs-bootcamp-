@@ -1,16 +1,16 @@
 const { sequelize, Sequelize } = require('../coonection');
 const Employee = sequelize.define('employee', {
-    employeeId: {
+    id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
        allowNull: false
     },
-    employeeName: {
+    name: {
         type: Sequelize.STRING,
         allowNull: false
     },
-    employeeEmail: {
+    email: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true
