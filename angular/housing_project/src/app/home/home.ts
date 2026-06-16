@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject} from '@angular/core';
 import { HousingLocation } from '../housing-location/housing-location';
 import { Houseinfo } from '../interfaces/houseinfo';
+import { HousingService } from '../services/housing-service';
+
 
 @Component({
   selector: 'app-home',
@@ -9,16 +11,30 @@ import { Houseinfo } from '../interfaces/houseinfo';
   styleUrl: './home.css',
 })
 export class Home {
-  housingLocation: Houseinfo = 
-    {
-      id: 1,
-      name: 'Acme Fresh Start Housing',
-      city: 'Chicago',
-      state: 'IL',
-      photo: 'https://angular.dev/assets/images/tutorials/common/example-house.jpg',
-      availableUnits: 4,
-      wifi: true,
-      laundry: true,
+  housingService: HousingService = inject(HousingService);
+  housingLocations: Houseinfo[] = [];
+  filteredLocationList: Houseinfo[] = [];
+ 
+  constructor() {
+    this.housingLocations = this.housingService.getAllHousingLocations();
+    this.filteredLocationList = this.housingLocations;
+
+  }
+    filterLocations(searchValue: string) {
+    console.log(searchValue);
+    if (!searchValue) {
+      this.filteredLocationList = this.housingLocations;
+      return;
     }
+ 
+    this.filteredLocationList = this.housingLocations.filter((location) =>
+      location?.city.toLowerCase().includes(searchValue.toLowerCase()) ||
+      location?.name.toLowerCase().includes(searchValue.toLowerCase()),
+    );
+ 
+    console.log(this.filteredLocationList);
+ 
+  }
   
+
 }

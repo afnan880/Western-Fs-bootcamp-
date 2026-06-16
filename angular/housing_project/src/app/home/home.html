@@ -1,23 +1,11 @@
-<section class="result"> </section>
-<app-housing-location [housingLocation]="housingLocation"></app-housing-location>
-
-
-
 <section>
-<form>
-<input type="text" placeholder="Search for properties..." class="search-bar".>
-<button type="submit" class="search-button">Search</button> 
-
-
-
-
-
+    <form>
+        <input type="text" placeholder="Search for properties..." class="search-bar" #filteredLocations>
+        <button  class="primary" type="button" (click)="filterLocations(filteredLocations.value)">Search</button>
 </form>
-
-
-
-
-
-
-
+</section>
+<section class="result">
+    @for (housingLocation of filteredLocationList; track housingLocation.id){
+    <app-housing-location [housingLocation]="housingLocation"></app-housing-location>
+    }
 </section>

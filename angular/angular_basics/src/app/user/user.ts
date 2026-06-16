@@ -40,6 +40,11 @@ export class User {
 
 route = inject(ActivatedRoute);
 
+onUserNameChange(newName: string) {
+  console.log('Received userNameChange event with value inside Parent:', newName);
+  this.userName = newName;
+}
+
 
 
 

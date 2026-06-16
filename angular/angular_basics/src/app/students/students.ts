@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Userservice } from '../services/userservice';
 import { Person } from '../../interfaces/person';
 @Component({
@@ -8,9 +8,11 @@ import { Person } from '../../interfaces/person';
   styleUrl: './students.css',
 })
 export class Students {
+  studentCount = signal(0);
   studentList: Person[] = [];
 
   constructor(private userService: Userservice) {
     this.studentList = this.userService.getUsers();
+    this.studentCount.set(this.studentList.length);
   }
 }

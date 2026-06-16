@@ -1,4 +1,5 @@
 <p>students list!</p>
+Student count: {{ studentCount() }}
 @for (student of studentList; track student.name) {
     <div>
   <p>{{ 'Name: ' + student.name + ' Age: ' + student.age + ' City: ' + student.city }}</p>

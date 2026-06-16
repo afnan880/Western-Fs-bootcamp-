@@ -23,4 +23,4 @@
 <button (click)="updateUserName()">Set Username to John Doe</button>
 
 <app-students></app-students>
-<app-user-details [childUserName]="userName"></app-user-details>
+<app-user-details [childUserName]="userName" [childUserList]="userList"] (usernNameChange)="onUserNameChange($event)"></app-user-details>

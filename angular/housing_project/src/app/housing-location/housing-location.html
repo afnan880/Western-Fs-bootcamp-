@@ -2,5 +2,5 @@
     <img [src]="housingLocation.photo" alt="Photo not found" class="listing-photo">
     <h2 class="listing-heading">{{ housingLocation.name }}</h2>
     <p class="listing-location">{{ housingLocation.city }}, {{ housingLocation.state }}</p>
-
+<a [routerLink]="['/details', housingLocation.id]">View Details</a>
 </section>
