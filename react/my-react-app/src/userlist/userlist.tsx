@@ -1,5 +1,6 @@
-import Profile from "../profile/profile";
- 
+import Profile from "../profile/profile"
+import './userlist.css'
+
 export default function UserList() {
     const users = [
         {
@@ -27,9 +28,9 @@ export default function UserList() {
             role: "admin"
         },
     ];
- 
+
     return (
-        <div>
+        <div className="profiles">
             {users.map((user, index) => (
                 <Profile
                     key={index}
@@ -40,5 +41,13 @@ export default function UserList() {
                 />
             ))}
         </div>
+
     );
 }
+
+//Create a new component. Name it List. 
+//In the List component, create an array if users.
+// For instance ['Robert', 'Emily', 'Michael', 'Sarah']
+//Use the map function to iterate over the array of users and render the list of users
+// in <ul> <li> tags.
+//Include this List component in the App component to display the list of users.

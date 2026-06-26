@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
- 
+ import Parent from "./UseCallBack/Parent";
 const initialItems = new Array(19_999_999).fill(0).map((_, i) => {
   return {
     id: i,
@@ -20,6 +20,7 @@ function Counter() {
       <h1>Count: {count}</h1>
       <h1>Selected Item: {selectedItem?.id}</h1>
       <button onClick={() => setCount(count + 1)}>Increment</button>
+      <Parent/>
     </div>
   );
 }

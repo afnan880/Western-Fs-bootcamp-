@@ -1,47 +1,36 @@
 import { useState, useEffect } from 'react';
- 
+import { NavLink, Outlet } from 'react-router';
+
 function Customers(){
-    const [count, setCount]=useState(1);
-    const [customer,setCustomer] =useState({id:1,name:'',email:'',phone:'',website:''});
-    if (
-count < 1 ||count > 10) {
-    setCount(1);
-    return;
-}        
- 
+
+    const [customers, setCustomers] = useState([{ id: 0, name: '', email: '', phone: '', website: '' }]);
+
     useEffect(() => {
         const fetchCustomers = async () => {
             try {
-                const response = await fetch(`https://jsonplaceholder.typicode.com/users/${count}`);
-                const customer = await response.json();
-                setCustomer(customer);
-                console.log('Fetched customers:', customer);
+                const response = await fetch(`https://jsonplaceholder.typicode.com/users`);
+                const customers = await response.json();
+                setCustomers(customers);
             } catch (error) {
                 console.error('Error fetching customers:', error);
             }
         };
         fetchCustomers();
-    }, [count]);
- 
+    }, []);
+
     return(
         <div>
             <h1>Customers</h1>
- <ul>
-<li key={customer.id}>
-<h2>{customer.name}</h2>
-<p>{customer.email}</p>
-<p>{customer.phone}</p>
-<p>{customer.website}</p>
-</li>
-
- </ul>
-
-<button onClick={() => setCount(count+1)}>Next customer</button>
-<button onClick={() => setCount(count-1)}>previous customer</button>
-
-
+            <ul className="list-group">
+                {customers.map((customer) => (
+                    <li key={customer.id} className="list-group-item">
+                        <NavLink to={`/customers/${customer.id}`}>{customer.name}</NavLink>
+                    </li>
+                ))}
+            </ul>
+            <Outlet />
         </div>
-    );
+    )
 }
- 
+
 export default Customers;

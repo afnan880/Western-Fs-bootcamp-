@@ -1,24 +1,23 @@
-import './profile.css'
- 
+import './Profile.css'
+
 type ProfileProps = {
-     imgUrl: string
-     fullName:string
-     description: string
-     role:string
+    imgUrl: string
+    fullName: string
+    description: string
+    role: string
 };
- 
-    // function inside a function is called a nested function, it is a way to organize code and avoid polluting the global scope. The handleClick function is defined inside the Profile component, so it can access the state and props of the Profile component.
 
- 
 export default function Profile({ imgUrl, fullName, description, role }: ProfileProps) {
- 
-    return (
-        <div className="profile">
-        <img className="logo" src={imgUrl} alt="Hero Image" />
-        <h2>{fullName}</h2>
-        <p>{description}</p>
-        {!role || role !== 'admin' ? <p>User</p> : <p>Admin User</p>}
 
+    return (
+        <div className="card" style={{ width: '400px' }}>
+            <img className="card-img-top" src={imgUrl} alt="Hero Image" />
+            <div className="card-body">
+                <h4 className="card-title">{fullName}</h4>
+                <p className="card-text">{description}</p>
+                <p className="card-text">{!role || role !== 'admin' ? <p>User</p> : <p>Admin User</p>}</p>
+            </div>
         </div>
+
     )
 }

@@ -3,16 +3,13 @@
 // import heroImg from './assets/hero.png'
 import './App.css'
 // We are directly using the Profile component in the App component,
-// bcuz it has export as default in profile.tsx
-
+// bcuz it has export as default in profile.tsx 
+import List  from './list/list.tsx'
 import { Button } from './button/button.tsx'
+
 import ProfileDetails from './profileDetails/profiledetail.tsx'
-import Counter from './Hooks/useMemo.tsx'
-import UserList from './userlist/userlist.tsx'
-import List from './list/list.tsx'
-import Customers from './customers/customers.tsx'
-import Post from './customers/post.tsx'
-import Parent from './Hooks/UseCallBack/Parent.tsx'
+
+
 function App() {
 
   const person = {
@@ -26,10 +23,11 @@ function App() {
     }
   }
 
+
   return (
     //Rule 1 - We call it a fragment, it is a way to group multiple elements without adding an extra node to the DOM
     <>
-      <h1>Welcome to App page</h1>
+      <h1>Welcome to App Page</h1>
       <ProfileDetails>
         <div style={person.theme}>
           <h1>{person.name}</h1>
@@ -42,17 +40,12 @@ function App() {
       {/* Rule #3 all attributes must be in camelCase, for example, the class attribute must be written as className in React.
        class is reserved in React/HTML so we need use className */}
       <div style={{ backgroundColor: 'lightgray' }} >
-
-
-        <UserList />
         <List />
       </div>
-      <Counter />
-      <Button text="submit" message="successful" />
-      <Button text="cancel" message="declined" />
-<Customers/>
-<Post/>
-<Parent/>
+      <div className="d-flex justify-content-center mt-3">
+        <Button className="btn btn-primary w-25" text="Submit" message="Form submitted successfully!" />
+        <Button className="btn btn-secondary w-25 ms-2" text="Cancel" message="Form cancelled successfully!" />
+      </div>
     </>
     //Similar to name pass the description from the parent to child.
   )

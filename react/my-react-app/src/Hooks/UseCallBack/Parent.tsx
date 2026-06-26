@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import Child from './Child.tsx'
+import Child from './Child';
  
 function Parent() {
  
