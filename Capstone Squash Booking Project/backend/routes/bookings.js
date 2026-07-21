@@ -19,15 +19,15 @@ function getEndTime(startTime) {
 //  get bookings - list all bookings 
 router.get('/', async (req, res) => {
   const { date, court_id } = req.query;
-  let query = 'SELECT * FROM bookings WHERE 1=1';
+  let query = 'SELECT * FROM bookings';
   const params = [];
 
   if (date) {
-    query += ' AND booking_date = ?';
+    query += ' WHERE booking_date = ?';
     params.push(date);
   }
   if (court_id) {
-    query += ' AND court_id = ?';
+    query += (date ? ' AND' : ' WHERE') + ' court_id = ?';
     params.push(court_id);
   }
 
@@ -137,6 +137,10 @@ router.put('/:id', async (req, res) => {
 //  - cancel a booking
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
+
+  if(!id || isNaN(id)) {
+    return res.status(400).json({ error: 'Booking ID is required and it should be a number' });
+  }
 
   try {
     const [result] = await pool.query('DELETE FROM bookings WHERE booking_id = ?', [id]);
