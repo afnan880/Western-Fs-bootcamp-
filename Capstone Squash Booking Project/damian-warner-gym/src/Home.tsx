@@ -87,7 +87,7 @@ onClick={() => onNavigate(p)}
 <span className="gold">PLAY TODAY.</span>
 </h1>
 <p className="sub">
-Four squash courts, open 5 AM – 11 PM daily. Reserve in under a
+Three squash courts, open 5 AM – 11 PM daily. Reserve in under a
 minute — members and guests welcome.
 </p>
 <div className="btn-row">
