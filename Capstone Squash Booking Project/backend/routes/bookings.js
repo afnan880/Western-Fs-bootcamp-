@@ -55,7 +55,7 @@ router.post('/', async (req, res) => {
   } = req.body;
 
   // Basic validation
-  if (!court_id || !booking_date || !start_time || !num_players || !is_member) {
+  if (!court_id || !booking_date || !start_time || !num_players || typeof is_member !== 'boolean') {
     return res.status(400).json({ error: 'Missing required booking fields' });
   }
   if (![1, 2].includes(Number(num_players))) {
@@ -66,6 +66,17 @@ router.post('/', async (req, res) => {
   }
 
   const end_time = getEndTime(start_time);
+  // The booking screen currently collects a member name, not an authenticated
+  // numeric member ID. Avoid inserting that name into the integer member_id
+  // column; retain it as the booking contact until member authentication exists.
+  const numericMemberId = Number(member_id);
+  const resolvedMemberId = Number.isInteger(numericMemberId) && numericMemberId > 0
+    ? numericMemberId
+    : null;
+  const memberFlag = is_member ? 'Y' : 'N';
+  const resolvedGuestName = guest_name || (
+    is_member && typeof member_id === 'string' ? member_id.trim() || null : null
+  );
 
   try {
     // Check slot isn't already booked 
@@ -81,7 +92,7 @@ router.post('/', async (req, res) => {
       `INSERT INTO bookings
         (court_id, member_id, booking_date, start_time, end_time, num_players, is_member, guardian_required, guest_name, guest_contact)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [court_id, member_id || null, booking_date, start_time, end_time, num_players, is_member, guardian_required || 'N', guest_name || null, guest_contact || null]
+      [court_id, resolvedMemberId, booking_date, start_time, end_time, num_players, memberFlag, guardian_required || 'N', resolvedGuestName, guest_contact || null]
     );
 
     res.status(201).json({ booking_id: result.insertId, message: 'Booking created' });

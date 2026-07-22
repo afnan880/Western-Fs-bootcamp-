@@ -4,6 +4,9 @@ const express = require('express');
 const cors = require('cors');
 const pool = require('./Connection');
 
+
+
+
 const courtsRouter = require('./routes/courts');
 const bookingsRouter = require('./routes/bookings');
 
@@ -13,8 +16,11 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-app.use('/courts', courtsRouter);
-app.use('/bookings', bookingsRouter);
+app.use('/api/courts', courtsRouter);
+// Keep the plural resource route as the canonical endpoint.  The singular
+// route is retained so existing clients calling /api/booking still work.
+app.use('/api/bookings', bookingsRouter);
+app.use('/api/booking', bookingsRouter);
 
 app.get('/', (req, res) => {
   res.json({ message: 'Squash Booking API is running' });
