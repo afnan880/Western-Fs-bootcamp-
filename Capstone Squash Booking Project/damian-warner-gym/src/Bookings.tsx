@@ -4,106 +4,109 @@ import { Calendar, Clock, Users, Check } from "lucide-react";
 export type Page = "home" | "squash" | "bookings";
 
 interface BookingsProps {
-onNavigate: (page: Page) => void;
-currentPage?: Page;
+      onNavigate: (page: Page) => void;
+      currentPage?: Page;
 }
 
 export interface BookingPayload {
-court_id: number;
-booking_date: string; // YYYY-MM-DD
-start_time: string; // HH:MM:SS
-num_players: 1 | 2;
-is_member: boolean;
-guardian_required: "Y" | "N";
-member_id: string | null;
-guest_name: string | null;
-guest_contact: string | null;
+      court_id: number;
+      booking_date: string; // YYYY-MM-DD
+      start_time: string; // HH:MM:SS
+      num_players: 1 | 2;
+      is_member: boolean;
+      guardian_required: "Y" | "N";
+      member_id: string | null;
+      guest_name: string | null;
+      guest_contact: string | null;
 }
 
 const COURTS: number[] = [1, 2, 3];
 const HOURS: number[] = Array.from({ length: 18 }, (_, i) => 5 + i); // 5am..10pm start times
 
 function formatHour(h: number): string {
-const period = h < 12 ? "AM" : "PM";
-const display = h % 12 === 0 ? 12 : h % 12;
-return `${display}:00 ${period}`;
+      const period = h < 12 ? "AM" : "PM";
+      const display = h % 12 === 0 ? 12 : h % 12;
+      return `${display}:00 ${period}`;
 }
 
 function todayLabel(): string {
-const d = new Date();
-return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+      const d = new Date();
+      return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 }
 
 function todayISO(): string {
-return new Date().toISOString().slice(0, 10);
+      return new Date().toISOString().slice(0, 10);
 }
 
 const Bookings: React.FC<BookingsProps> = ({ onNavigate, currentPage = "bookings" }) => {
-const [court, setCourt] = useState<number>(1);
-const [date] = useState<string>(todayISO());
-const [hour, setHour] = useState<number | null>(null);
-const [numPlayers, setNumPlayers] = useState<1 | 2>(1);
-const [guardianRequired, setGuardianRequired] = useState<boolean>(false);
-const [isMember, setIsMember] = useState<boolean>(true);
-const [name, setName] = useState<string>("");
-const [contact, setContact] = useState<string>("");
-const [bookedSlots, setBookedSlots] = useState<Record<string, boolean>>({
-"1-7": true,
-"1-10": true,
-"1-21": true,
-});
-const [confirmed, setConfirmed] = useState<BookingPayload | null>(null);
-const [error, setError] = useState<string>("");
+      const [court, setCourt] = useState<number>(1);
+      const [date] = useState<string>(todayISO());
+      const [hour, setHour] = useState<number | null>(null);
+      const [numPlayers, setNumPlayers] = useState<1 | 2>(1);
+      const [guardianRequired, setGuardianRequired] = useState<boolean>(false);
+      const [isMember, setIsMember] = useState<boolean>(true);
+      const [name, setName] = useState<string>("");
+      const [contact, setContact] = useState<string>("");
+      const [bookedSlots, setBookedSlots] = useState<Record<string, boolean>>({
+            "1-7": true,
+            "1-10": true,
+            "1-21": true,
+      });
+      const [confirmed, setConfirmed] = useState<BookingPayload | null>(null);
+      const [error, setError] = useState<string>("");
 
-const key = (c: number, h: number): string => `${c}-${h}`;
+      const key = (c: number, h: number): string => `${c}-${h}`;
 
-const canSubmit = useMemo<boolean>(() => {
-if (hour === null) return false;
-if (!name.trim()) return false;
-if (!isMember && !contact.trim()) return false;
-return true;
-}, [hour, name, isMember, contact]);
+      const canSubmit = useMemo<boolean>(() => {
+            if (hour === null) return false;
+            if (!name.trim()) return false;
+            if (!isMember && !contact.trim()) return false;
+            return true;
+      }, [hour, name, isMember, contact]);
 
-async function submit(): Promise<void> {
-setError("");
- if (hour === null) return;
-if (bookedSlots[key(court, hour)]) {
-      setError("This slot is already booked. Pick another time.");
-      return;
-    }
-    const booking: BookingPayload = {
-      court_id: court,
-      booking_date: date,
-      start_time: `${String(hour).padStart(2, "0")}:00:00`,
-      num_players: numPlayers,
-      is_member: isMember,
-      guardian_required: guardianRequired ? "Y" : "N",
-      member_id: isMember ? name : null,
-      guest_name: isMember ? null : name,
-      guest_contact: isMember ? null : contact,
-    };
+      async function submit(): Promise<void> {
+            setError("");
+            if (hour === null) return;
+            if (bookedSlots[key(court, hour)]) {
+                  setError("This slot is  booked. Pick another time.");
+                  return;
+            }
+            console.log(bookedSlots);
+            const booking: BookingPayload = {
+                  court_id: court,
+                  booking_date: date,
+                  start_time: `${String(hour).padStart(2, "0")}:00:00`,
+                  num_players: numPlayers,
+                  is_member: isMember,
+                  guardian_required: guardianRequired ? "Y" : "N",
+                  member_id: isMember ? name : null,
+                  guest_name: isMember ? null : name,
+                  guest_contact: isMember ? null : contact,
+            };
 
-    try {
-      const res = await fetch("/api/bookings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(booking),
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        setError(data.error || "Booking failed.");
-        return;
-      }
-      setBookedSlots({ ...bookedSlots, [key(court, hour)]: true });
-      setConfirmed(booking);
-    } catch (err) {
-      setError("Could not reach the server. Is the backend running?");
-    }
-  }
+            try {
+                  const res = await fetch("/api/bookings", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(booking),
+                  });
+                  if (!res.ok) {
+                        const data = await res.json();
+                        setError(data.error || "Booking failed.");
+                        return;
+                  }
 
-return (
-<div className="app">
-<style>{`
+                  console.log(bookedSlots);
+                  setBookedSlots({ ...bookedSlots, [key(court, hour)]: true });
+                  setConfirmed(booking);
+            } catch (err) {
+                  setError("Could not reach the server. Is the backend running?");
+            }
+      }
+
+      return (
+            <div className="app">
+                  <style>{`
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 * { box-sizing: border-box; }
 .app {
@@ -176,135 +179,135 @@ input:focus { outline: 2px solid #F2B807; outline-offset: 1px; }
 .confirm-box p { font-size: 13.5px; color: #C7CCD3; margin: 0 0 14px; }
 `}</style>
 
-<nav className="nav">
-<div className="brand" onClick={() => onNavigate("home")}>
-<span className="brand-icon" />
-<span className="brand-name">Damian Warner Gym</span>
-</div>
-<div className="nav-links">
-{(["home", "squash", "bookings"] as Page[]).map((p) => (
-<button
-key={p}
-className={`nav-link ${currentPage === p ? "active" : ""}`}
-onClick={() => onNavigate(p)}
->
-{p.toUpperCase()}
-</button>
-))}
-</div>
-</nav>
+                  <nav className="nav">
+                        <div className="brand" onClick={() => onNavigate("home")}>
+                              <span className="brand-icon" />
+                              <span className="brand-name">Damian Warner Gym</span>
+                        </div>
+                        <div className="nav-links">
+                              {(["home", "squash", "bookings"] as Page[]).map((p) => (
+                                    <button
+                                          key={p}
+                                          className={`nav-link ${currentPage === p ? "active" : ""}`}
+                                          onClick={() => onNavigate(p)}
+                                    >
+                                          {p.toUpperCase()}
+                                    </button>
+                              ))}
+                        </div>
+                  </nav>
 
-<div className="page">
-<div className="book-head">
-<div className="eyebrow">Bookings</div>
-<h1>RESERVE A COURT</h1>
-</div>
+                  <div className="page">
+                        <div className="book-head">
+                              <div className="eyebrow">Bookings</div>
+                              <h1>RESERVE A COURT</h1>
+                        </div>
 
-<div className="court-tabs">
-{COURTS.map((c) => (
-<button
-key={c}
-className={`court-tab ${court === c ? "active" : ""}`}
-onClick={() => {
-setCourt(c);
-setHour(null);
-setConfirmed(null);
-}}
->
-Court {c}
-</button>
-))}
-</div>
+                        <div className="court-tabs">
+                              {COURTS.map((c) => (
+                                    <button
+                                          key={c}
+                                          className={`court-tab ${court === c ? "active" : ""}`}
+                                          onClick={() => {
+                                                setCourt(c);
+                                                setHour(null);
+                                                setConfirmed(null);
+                                          }}
+                                    >
+                                          Court {c}
+                                    </button>
+                              ))}
+                        </div>
 
-<div className="meta-row">
-<div className="meta-pill"><Calendar size={14} /> <b>{todayLabel()}</b></div>
-<div className="meta-pill"><Clock size={14} /> 1-hour slots</div>
-<div className="meta-pill"><Users size={14} /> Max <b>2</b> players / court</div>
-</div>
+                        <div className="meta-row">
+                              <div className="meta-pill"><Calendar size={14} /> <b>{todayLabel()}</b></div>
+                              <div className="meta-pill"><Clock size={14} /> 1-hour slots</div>
+                              <div className="meta-pill"><Users size={14} /> Max <b>2</b> players / court</div>
+                        </div>
 
-<div className="slot-list">
-{HOURS.map((h) => {
-const taken = !!bookedSlots[key(court, h)];
-const sel = hour === h;
-return (
-<div
-key={h}
-className={`slot-row ${sel ? "selected" : ""} ${taken ? "taken" : ""}`}
-onClick={() => !taken && setHour(h)}
->
-<div className="time">{formatHour(h)}</div>
-<div className="status">{taken ? "Booked" : sel ? "Selected" : "Open"}</div>
-</div>
-);
-})}
-</div>
+                        <div className="slot-list">
+                              {HOURS.map((h) => {
+                                    const taken = !!bookedSlots[key(court, h)];
+                                    const sel = hour === h;
+                                    return (
+                                          <div
+                                                key={h}
+                                                className={`slot-row ${sel ? "selected" : ""} ${taken ? "taken" : ""}`}
+                                                onClick={() => !taken && setHour(h)}
+                                          >
+                                                <div className="time">{formatHour(h)}</div>
+                                                <div className="status">{taken ? "Booked" : sel ? "Selected" : "Open"}</div>
+                                          </div>
+                                    );
+                              })}
+                        </div>
 
-<div className="legend">
-<span><span className="dot avail" /> Available</span>
-<span><span className="dot taken" /> Already booked</span>
-<span><span className="dot sel" /> Your selection</span>
-</div>
+                        <div className="legend">
+                              <span><span className="dot avail" /> Available</span>
+                              <span><span className="dot taken" /> Already booked</span>
+                              <span><span className="dot sel" /> Your selection</span>
+                        </div>
 
-<div className="form-card">
-<div className="field-label">Number of Players</div>
-<div className="toggle-row">
-<button className={`toggle-btn ${numPlayers === 1 ? "sel" : ""}`} onClick={() => setNumPlayers(1)}>1 Player</button>
-<button className={`toggle-btn ${numPlayers === 2 ? "sel" : ""}`} onClick={() => setNumPlayers(2)}>2 Players</button>
-</div>
+                        <div className="form-card">
+                              <div className="field-label">Number of Players</div>
+                              <div className="toggle-row">
+                                    <button className={`toggle-btn ${numPlayers === 1 ? "sel" : ""}`} onClick={() => setNumPlayers(1)}>1 Player</button>
+                                    <button className={`toggle-btn ${numPlayers === 2 ? "sel" : ""}`} onClick={() => setNumPlayers(2)}>2 Players</button>
+                              </div>
 
-<div className="field-label">Guardian Required?</div>
-<div className="toggle-row">
-<button className={`toggle-btn ${!guardianRequired ? "sel" : ""}`} onClick={() => setGuardianRequired(false)}>No</button>
-<button className={`toggle-btn ${guardianRequired ? "sel" : ""}`} onClick={() => setGuardianRequired(true)}>Yes</button>
-</div>
+                              <div className="field-label">Guardian Required?</div>
+                              <div className="toggle-row">
+                                    <button className={`toggle-btn ${!guardianRequired ? "sel" : ""}`} onClick={() => setGuardianRequired(false)}>No</button>
+                                    <button className={`toggle-btn ${guardianRequired ? "sel" : ""}`} onClick={() => setGuardianRequired(true)}>Yes</button>
+                              </div>
 
-<div className="field-label">Booking As</div>
-<div className="toggle-row">
-<button className={`toggle-btn ${isMember ? "sel" : ""}`} onClick={() => setIsMember(true)}>Member</button>
-<button className={`toggle-btn ${!isMember ? "sel" : ""}`} onClick={() => setIsMember(false)}>Guest</button>
-</div>
+                              <div className="field-label">Booking As</div>
+                              <div className="toggle-row">
+                                    <button className={`toggle-btn ${isMember ? "sel" : ""}`} onClick={() => setIsMember(true)}>Member</button>
+                                    <button className={`toggle-btn ${!isMember ? "sel" : ""}`} onClick={() => setIsMember(false)}>Guest</button>
+                              </div>
 
-<div className="field-label">Name</div>
-<input type="text" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)} />
+                              <div className="field-label">Name</div>
+                              <input type="text" placeholder="Enter your name" value={name} onChange={(e) => setName(e.target.value)} />
 
-{!isMember && (
-<>
-<div className="field-label">Contact</div>
-<input type="tel" placeholder="Phone number" value={contact} onChange={(e) => setContact(e.target.value)} />
-</>
-)}
+                              {!isMember && (
+                                    <>
+                                          <div className="field-label">Contact</div>
+                                          <input type="tel" placeholder="Phone number" value={contact} onChange={(e) => setContact(e.target.value)} />
+                                    </>
+                              )}
 
-{error && <div className="error-box">{error}</div>}
+                              {error && <div className="error-box">{error}</div>}
 
-{!confirmed ? (
-<button
-className="btn-gold"
-style={{ width: "100%", marginTop: 20, opacity: canSubmit ? 1 : 0.4 }}
-disabled={!canSubmit}
-onClick={submit}
->
-{hour !== null ? `Confirm Booking — ${formatHour(hour)}, Court ${court}` : "Select a time to continue"}
-</button>
-) : (
-<div className="confirm-box">
-<h4><Check size={18} /> Court Reserved</h4>
-<p>Court {court}, {todayLabel()} at {hour !== null ? formatHour(hour) : ""}.</p>
-<button
-className="btn-outline"
-style={{ width: "100%" }}
-onClick={() => {
-setConfirmed(null);
-setHour(null);
-}}
->
-Book Another Slot
-</button>
-</div>
-)}
-</div>
-</div>
-</div>
-);
+                              {!confirmed ? (
+                                    <button
+                                          className="btn-gold"
+                                          style={{ width: "100%", marginTop: 20, opacity: canSubmit ? 1 : 0.4 }}
+                                          disabled={!canSubmit}
+                                          onClick={submit}
+                                    >
+                                          {hour !== null ? `Confirm Booking — ${formatHour(hour)}, Court ${court}` : "Select a time to continue"}
+                                    </button>
+                              ) : (
+                                    <div className="confirm-box">
+                                          <h4><Check size={18} /> Court Reserved</h4>
+                                          <p>Court {court}, {todayLabel()} at {hour !== null ? formatHour(hour) : ""}.</p>
+                                          <button
+                                                className="btn-outline"
+                                                style={{ width: "100%" }}
+                                                onClick={() => {
+                                                      setConfirmed(null);
+                                                      setHour(null);
+                                                }}
+                                          >
+                                                Book Another Slot
+                                          </button>
+                                    </div>
+                              )}
+                        </div>
+                  </div>
+            </div>
+      );
 };
 
 export default Bookings;

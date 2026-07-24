@@ -85,7 +85,7 @@ router.post('/', async (req, res) => {
       [court_id, booking_date, start_time]
     );
     if (existing.length > 0) {
-      return res.status(409).json({ error: 'This slot is already booked' });
+      return res.status(409).json({ error: 'This slot is  booked' });
     }
 
     const [result] = await pool.query(
