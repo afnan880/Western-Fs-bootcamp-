@@ -1,0 +1,188 @@
+# Squash Booking Project — Code Explanation
+
+A file-by-file breakdown of what the code does and why it's built that way. Use this as reference material alongside the presentation script — it goes into more technical depth than the speaking script does.
+
+---
+
+## Backend
+
+### `server.js` — API entry point
+
+This is where the Express app is assembled and started.
+
+```js
+require('dotenv').config();
+```
+Loads environment variables (DB credentials, JWT secret, port) from a `.env` file. Keeps secrets out of the codebase entirely — nothing sensitive is ever hardcoded or committed to git.
+
+```js
+app.use(cors());
+```
+Enables Cross-Origin Resource Sharing. During development, the React frontend (Vite dev server) and the Express backend run on different ports, which browsers treat as different "origins." Without CORS enabled, the browser would block the frontend's requests to the API.
+
+```js
+app.use(express.json());
+```
+Built-in Express middleware that parses incoming JSON request bodies into `req.body`. Without this, `req.body` would be `undefined` on POST requests.
+
+```js
+app.use('/api/courts', courtsRouter);
+app.use('/api/bookings', bookingsRouter);
+app.use('/api/booking', bookingsRouter);
+```
+Each resource (courts, bookings) gets its own router file rather than every endpoint living in one giant file. This is standard REST API structure — it scales cleanly as more resources get added. The extra `/api/booking` (singular) line is a backwards-compatibility shim: it points to the exact same router as `/api/bookings`, so if any older client code called the singular route, it still works without duplicating logic.
+
+```js
+app.get('/test-db', async (req, res) => { ... });
+```
+A diagnostic route that queries the `courts` table directly. Useful for confirming the database connection works independent of any frontend — you can hit this in a browser or Postman and immediately know if the DB layer is healthy.
+
+**Why this matters:** separating concerns (parsing, CORS, routing) into distinct middleware and router files means each piece can be tested, changed, or debugged independently.
+
+---
+
+### `Connection.js` — database connection
+
+```js
+const mysql = require('mysql2/promise');
+```
+Uses the promise-based version of the `mysql2` driver, so database queries can be written with `async`/`await` instead of nested callbacks.
+
+```js
+const pool = mysql.createPool({
+  host: ...,
+  user: ...,
+  password: ...,
+  database: ...,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
+```
+This creates a **connection pool**, not a single connection. The difference matters a lot in practice:
+
+- A single connection means every request has to wait its turn to use that one connection to the database.
+- A pool keeps multiple connections (up to 10 here) open and ready, so several requests can query the database at the same time.
+
+`waitForConnections: true` means that if all 10 connections are busy, a new request queues and waits rather than failing immediately. `queueLimit: 0` means that queue has no cap — it'll wait indefinitely rather than reject with an error under heavy load (a tradeoff worth knowing: it favors availability over fast-failing).
+
+**Why this matters:** booking systems are exactly the kind of app where concurrent requests are common — multiple users checking availability or submitting bookings around the same moment. A pool handles that far better than a single shared connection.
+
+---
+
+### `routes/bookings.js` — the core booking logic
+
+Key pieces worth explaining:
+
+**Slot validation**
+```js
+const VALID_HOURS = Array.from({ length: 18 }, (_, i) => 5 + i); // 5am - 10pm
+```
+Generates the valid hourly start times (5 through 22) once, rather than hardcoding a list — cleaner and less error-prone if the operating hours ever change.
+
+**Preventing double-booking**
+```js
+const [existing] = await pool.query(
+  `SELECT booking_id FROM bookings WHERE court_id = ? AND booking_date = ? AND start_time = ?`,
+  [court_id, booking_date, start_time]
+);
+if (existing.length > 0) {
+  return res.status(409).json({ error: 'This slot is already booked' });
+}
+```
+Checks for a conflicting booking before inserting. The `409 Conflict` status code is the semantically correct HTTP status for "this request conflicts with the current state of the resource" — not a generic 400 or 500.
+
+Note: this pre-check alone isn't airtight against a true race condition (two requests arriving at the exact same instant). The real guarantee comes from a database-level uniqueness constraint on `(court_id, booking_date, start_time)`, which is why the code also catches `ER_DUP_ENTRY`:
+```js
+if (err.code === 'ER_DUP_ENTRY') {
+  return res.status(409).json({ error: 'This slot is already booked' });
+}
+```
+This is the actual source of truth for preventing double-bookings — the database itself rejects the second insert, and the code just translates that into a friendly API response.
+
+**Trusting the server, not the client, for identity**
+When a request comes with a valid JWT, `member_id` and `is_member` are derived from the verified token — never from whatever the client claims in the request body. This closes a spoofing path where a guest could just send `is_member: true` to get member treatment without actually being logged in.
+
+**Boolean fields as 1/0**
+```js
+const memberFlag = is_member ? 1 : 0;
+const guardianFlag = guardian_required ? 1 : 0;
+```
+Stored as `TINYINT(1)` in MySQL rather than text like `'Y'/'N'`. This is the standard convention for booleans in SQL — smaller storage footprint, faster indexing and comparisons, and it maps directly onto every backend language's native boolean type without a translation step.
+
+---
+
+## Frontend
+
+### `vite.config.ts` — dev server proxy
+
+```js
+server: {
+  proxy: {
+    '/api': {
+      target: 'http://localhost:5000',
+      changeOrigin: true,
+    },
+  },
+}
+```
+During development, the React app (Vite's dev server) and the Express API run on two different ports. This proxy rule means any frontend request to a path starting with `/api` gets silently forwarded to `localhost:5000`. The practical benefit: frontend code can just call `fetch('/api/bookings')` without hardcoding a port number, and it sidesteps CORS friction in local development entirely, since from the browser's perspective the request never left the Vite dev server's origin.
+
+### `index.html` + `main.tsx` — entry point
+
+Standard Vite/React scaffolding: a single `<div id="root">` in the HTML, and `main.tsx` mounts the React app into it as an ES module (`<script type="module" src="/src/main.tsx">`).
+
+### `BookingPayload` type (TypeScript)
+
+```ts
+export interface BookingPayload {
+  court_id: number;
+  booking_date: string;
+  start_time: string;
+  num_players: 1 | 2;
+  is_member: boolean;
+  guardian_required: "Y" | "N";
+  member_id: string | null;
+  guest_name: string | null;
+  guest_contact: string | null;
+}
+```
+`num_players: 1 | 2` is a TypeScript **literal union type** — the compiler enforces that this field can only ever be `1` or `2`, not any other number. That's a compile-time guarantee, not just a runtime check, meaning a bug that tries to assign `num_players = 3` would be caught before the code even runs, not discovered later in production.
+
+### Login-aware conditional rendering
+
+```tsx
+{!isLoggedIn && (
+  <div className="toggle-row">
+    <button onClick={() => setIsMember(true)}>Member</button>
+    <button onClick={() => setIsMember(false)}>Guest</button>
+  </div>
+)}
+```
+The member/guest toggle only renders when `isLoggedIn` is false. A logged-in user's membership status isn't a choice — it's a fact derived from their session — so the UI doesn't ask a question that's already answered.
+
+### Real-time slot status
+
+```ts
+const res = await fetch(`/api/bookings?court_id=${court}&date=${date}`);
+const rows = await res.json();
+```
+Rather than a hardcoded list of booked slots, the schedule grid fetches live data from the backend whenever the selected court changes, and rebuilds the booked/available map from actual database rows. After a successful booking, the newly booked slot is also added to local state immediately — so the UI updates instantly without waiting for a full refetch, while the actual conflict protection still lives server-side.
+
+---
+
+## package.json — dependency choices worth naming
+
+**Backend:**
+- `express` — web framework and router
+- `mysql2` — MySQL driver with promise/async support
+- `jsonwebtoken` — issues and verifies JWTs for login
+- `cors` — cross-origin request handling
+- `dotenv` — loads environment variables from `.env`
+
+**Frontend:**
+- `react` / `react-dom` (v19) — UI library
+- `vite` — build tool and dev server (fast HMR, ES module-based)
+- `typescript` — compile-time type safety
+- `lucide-react` — icon set used across the UI (Calendar, Clock, Users, Check icons)
+- `oxlint` — a Rust-based linter (faster alternative to ESLint), configured via `.oxlintrc.json` to enforce React-specific rules like the Rules of Hooks
