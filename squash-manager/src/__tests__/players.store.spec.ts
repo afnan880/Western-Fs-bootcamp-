@@ -5,9 +5,9 @@ import * as api from '../services/api'
 import type { Player } from '../types'
 
 const MOCK_PLAYERS: Player[] = [
-  { id: 1, name: 'Amara Osei', ranking: 1, level: 'Advanced', wins: 10, losses: 2 },
-  { id: 2, name: 'Liam Fitzgerald', ranking: 2, level: 'Advanced', wins: 8, losses: 4 },
-  { id: 3, name: 'Ravi Chandran', ranking: 3, level: 'Beginner', wins: 1, losses: 5 }
+  { id: 1, name: 'Gary', ranking: 1, level: 'Advanced', wins: 10, losses: 2 },
+  { id: 2, name: 'Francis', ranking: 2, level: 'Advanced', wins: 8, losses: 4 },
+  { id: 3, name: 'Albert', ranking: 3, level: 'Beginner', wins: 1, losses: 5 }
 ]
 
 function clone<T>(data: T): T {
@@ -57,18 +57,18 @@ describe('players store', () => {
     await store.loadPlayers()
 
     store.setSearchTerm('ama')
-    expect(store.filteredPlayers.map((p) => p.name)).toEqual(['Amara Osei'])
+    expect(store.filteredPlayers.map((p) => p.name)).toEqual(['Gary'])
 
     store.setSearchTerm('')
     store.setLevelFilter('Beginner')
-    expect(store.filteredPlayers.map((p) => p.name)).toEqual(['Ravi Chandran'])
+    expect(store.filteredPlayers.map((p) => p.name)).toEqual(['Albert '])
 
     store.setLevelFilter('All')
     store.setSortBy('wins')
     expect(store.filteredPlayers.map((p) => p.name)).toEqual([
-      'Amara Osei',
-      'Liam Fitzgerald',
-      'Ravi Chandran'
+      'Gary',
+      'Francis',
+      'Albert'
     ])
   })
 
