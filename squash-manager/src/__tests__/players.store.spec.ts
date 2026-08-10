@@ -56,12 +56,12 @@ describe('players store', () => {
     const store = usePlayersStore()
     await store.loadPlayers()
 
-    store.setSearchTerm('ama')
+    store.setSearchTerm('gar')
     expect(store.filteredPlayers.map((p) => p.name)).toEqual(['Gary'])
 
     store.setSearchTerm('')
     store.setLevelFilter('Beginner')
-    expect(store.filteredPlayers.map((p) => p.name)).toEqual(['Albert '])
+    expect(store.filteredPlayers.map((p) => p.name)).toEqual(['Albert'])
 
     store.setLevelFilter('All')
     store.setSortBy('wins')

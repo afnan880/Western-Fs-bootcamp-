@@ -12,7 +12,7 @@ const SEED_PLAYERS: Player[] = [
   { id: 5, name: 'Joviel', ranking: 5, level: 'Intermediate', wins: 15, losses: 12 },
   { id: 6, name: 'John', ranking: 6, level: 'Intermediate', wins: 13, losses: 14 },
   { id: 7, name: 'Sofi', ranking: 7, level: 'Intermediate', wins: 12, losses: 10 },
-  { id: 8, name: 'Afnan ', ranking: 8, level: 'Advanced', wins: 18, losses: 7 },
+  { id: 8, name: 'Afnan', ranking: 8, level: 'Advanced', wins: 18, losses: 7 },
   { id: 9, name: 'Ehab', ranking: 9, level: 'Beginner', wins: 6, losses: 9 },
   { id: 10, name: 'Tim', ranking: 10, level: 'Beginner', wins: 5, losses: 8 },
   { id: 11, name: 'Adil', ranking: 11, level: 'Beginner', wins: 4, losses: 10 },
