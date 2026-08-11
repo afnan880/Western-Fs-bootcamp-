@@ -80,7 +80,7 @@ describe('players store', () => {
       updated.find((p) => p.id === loserId)!.losses += 1
       return updated
     })
-
+ 
     const store = usePlayersStore()
     await store.loadPlayers()
 
