@@ -1,5 +1,7 @@
 import type { Player, MatchResultInput } from '../types'
+import type { Tournament, round, match } from '../typestournament'
 
+export type { Player, MatchResultInput, Tournament, round, match }
 // A tiny mock "API" so the store has something realistic to talk to.
 // It simulates network latency and can simulate failures, so the UI's
 // loading / error / retry states have something real to respond to.
